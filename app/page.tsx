@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 
 const OWNER_NAME = "Chirag Dodiya";
@@ -141,7 +142,7 @@ export default function Home() {
             CopyLift – Landing Page Copy Generator
           </h1>
           <h2 className="mt-2 text-lg font-medium text-zinc-600 dark:text-zinc-200">
-            Instantly craft compelling landing page copy using AI ✨
+            Instantly craft compelling landing page copy using AI
           </h2>
         </div>
 
