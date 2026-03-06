@@ -1,11 +1,12 @@
 # Next.js App Router Boilerplate — Operational Guide
 
-This repository is a minimal Next.js 16 (App Router) starter with React 19, TypeScript, Tailwind-ready PostCSS, and no backend/auth/billing. Use this document as the single operational reference. If anything is unclear: **STOP AND ASK** before proceeding.
+This repository powers **CopyLift**, the AI-driven SaaS that generates marketing copy for landing pages.
 
 ---
 
 ## 1. Current Scope
-- Purpose: baseline UI scaffold for future SaaS features.
+- Product: **CopyLift — Landing Page Copy Generator**
+- Instantly produce high-converting landing page text from product information or a website URL
 - No authentication, database, or API layer is present.
 - No env vars are required yet; `env.example` does not exist.
 
@@ -18,15 +19,17 @@ This repository is a minimal Next.js 16 (App Router) starter with React 19, Type
 ## 3. Project Structure
 ```
 app/
-  layout.tsx        # Root layout, loads fonts, applies globals
-  page.tsx          # Public landing page (server component)
-  globals.css       # Global styles; Tailwind entrypoint
+  layout.tsx        # Root layout, loads fonts, applies globals, sets site metadata (CopyLift branding)
+  page.tsx          # CopyLift generator landing page with dual flows: Product Info & Website URL
+  globals.css       # Global styles; Tailwind entrypoint, dark mode support
 public/             # Static assets (logos/icons)
 scripts/            # Ops helpers (minimal placeholders)
   dev-supervisor.js # Runs Next dev server
   db-init.js        # No-op (no DB)
   git-poll.js       # Polls git origin for branch updates
   error-reporter.ts # Client-safe error forwarder (imported via components/ErrorReporter)
+components/
+  ErrorReporter.tsx # Error propagation for UI
 Dockerfile          # Container definition (npm ci, runs dev-supervisor)
 eslint.config.mjs   # ESLint configuration
 next.config.ts      # Next.js config (minimal)
@@ -38,7 +41,7 @@ FILES.md            # Structural index
 RULES.md            # Change boundaries (boilerplate)
 ```
 
-## 4. Install & Run
+## 4. Install &amp; Run
 ```bash
 npm install
 npm run dev   # starts Next.js on localhost:3000
@@ -46,45 +49,43 @@ npm run lint  # ESLint
 npm run build # production build
 ```
 
-## 5. Routing & Components
-- Public landing page: `app/page.tsx`.
-- No route groups exist yet. When adding authenticated/dashboard areas, create `app/(dashboard)/...` and reuse shared layouts there (see RULES.md).
-- Keep components server-side by default; add `"use client"` only when required by client hooks/state.
+## 5. Major Features: CopyLift Generator UI
+- **Dual-Mode Form:** Toggle between:
+  - **Generate Copy From Product Info**
+    - Enter product name and description.
+    - Generates: Headline, Subheadline, Features, and CTA.
+  - **Generate Copy From Website URL**
+    - Enter URL of landing page.
+    - Analyzes site and generates: Headline, Features Summary, and CTA.
+- **Production-Ready UX:** Responsive, accessible, and styled with Tailwind.
+- **Copy-to-Clipboard:** Easily copy any generated text block with a single click.
+- **Input Validation &amp; Error Handling:** Prevent empty/invalid submissions, handle errors gracefully.
+- **Instant Results:** Copy generation is handled inline (stub AI logic for now; upgrade to API as needed).
+- **Footer:** Owner contact — Chirag Dodiya (<hi@chirag.co>).
 
 ## 6. Styling
-- Tailwind is enabled via `app/globals.css` (`@import "tailwindcss";`). There is no standalone `tailwind.config` yet; add one only if needed.
-- Limit global styles; prefer component- or route-scoped styles.
-- Fonts are loaded through `next/font` (Geist). Keep overrides minimal.
+- Tailwind enabled via `app/globals.css` (`@import "tailwindcss";`).
+- Responsive styles, accessible forms, clean sectioning, dark mode supported.
+- No custom Tailwind config; extend only as needed.
 
-## 7. Environment & Secrets
-- No env vars are defined. If you need configuration, first add `env.example` with keys and descriptions, then consume via `process.env.<KEY>`. Never commit secrets.
+## 7. Data &amp; Backend
+- No persistent backend or data layer yet.
+- Copy generation logic is local/stubbed. (Swap with OpenAI or similar as needed.)
+- No authentication; all features are public.
 
-## 8. Data & Backend (Absent)
-- No Prisma/ORM, no API routes, no database connections. When introducing data access, place server-only helpers under `lib/` and add API routes or server actions within `app/`. Document new contracts in FILES.md and RULES.md.
+## 8. Adding/Improving Features
+- Update `app/page.tsx` for UI/logic improvements.
+- Add new modules under `components/` (UI primitives), `lib/` (server helpers), or via route groups as needed.
+- Document any new backend, API, or dashboard areas in FILES.md and RULES.md before implementing.
 
-## 9. Testing (Not Present)
-- No tests are included. If adding tests, prefer:
-  - Unit: `__tests__/` or co-located `*.test.tsx`
-  - E2E: Playwright under `e2e/`
-  - Provide lightweight mocks/utilities
+## 9. Owner &amp; Contact
+- Project by Chirag Dodiya
+- Contact: [hi@chirag.co](mailto:hi@chirag.co)
 
-## 10. Change Guidelines
-- Default to minimal diffs; avoid rewrites.
-- Do not move files across route groups without coordination.
-- Avoid new Markdown explainer files unless explicitly requested; update existing docs instead.
-- Do not introduce time- or randomness-dependent values directly in React render (`Date.now()`, `Math.random()`). Precompute in server components, constants, or `useEffect` if client-only.
-- If adding auth, billing, or DB: update RULES.md and FILES.md first, then implement.
-- Only `scripts/error-reporter.ts` may be imported into runtime UI (via `components/ErrorReporter.tsx`); keep other scripts server-only.
-
-## 11. Hard Stops
-- Unclear requirements or missing context.
-- Requests to alter session/cookie behavior (not present) without approval.
-- Hand-editing generated migration SQL (when Prisma is added).
-- Storing or logging secrets in code or assets.
-
-## 12. Deployment
-- Default target: Next.js on Vercel or any Node 18+ host.
-- Docker support is not configured. Add a `Dockerfile` only with explicit need and document it.
+## 10. Deployment
+- Target: Next.js on Vercel or any Node 18+ host.
+- Docker support included.
+- No secrets/env vars required.
 
 ---
 
